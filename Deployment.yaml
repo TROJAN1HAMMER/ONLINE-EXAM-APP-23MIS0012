@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: th500/quiz-backend:v1
+          image: th500/quiz-backend:v2
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
