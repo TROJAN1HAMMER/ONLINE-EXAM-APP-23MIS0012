@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" style="background-color: #020617; overflow: hidden;">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>Online Exam - v1</title>
+    <style>
+      /* This CSS kills the white edges and the scrollbar globally */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background-color: #020617;
+        overflow: hidden; /* No scrolly */
+        height: 100vh;
+        width: 100vw;
+        position: fixed; /* Prevents "pull-to-refresh" or bounce scrolling */
+      }
+      #root {
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html> 
