@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const App = () => {
   const [selected, setSelected] = useState({});
-
+  const [score, setScore] = useState(null);
   const questions = [
     {
       id: 1,
@@ -19,6 +19,23 @@ const App = () => {
   const handleSelect = (qid, opt) => {
     setSelected((prev) => ({ ...prev, [qid]: opt }));
   };
+
+  const handleSubmit = async () => {
+  const res = await fetch("http://localhost:3000/api/quiz/submit", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      answers: selected
+    })
+  });
+
+  const data = await res.json();
+
+  console.log("Score:", data.score);
+  setScore(data.score);
+};
 
   return (
     <div style={styles.container}>
@@ -68,7 +85,7 @@ const App = () => {
         {/* FOOTER */}
         <footer style={styles.footer}>
           <button 
-            onClick={() => alert("Submission Successful!")} 
+            onClick={handleSubmit} 
             style={styles.submitBtn}
           >
             Finish Attempt

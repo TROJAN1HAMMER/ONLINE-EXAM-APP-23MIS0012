@@ -2,15 +2,15 @@ FROM node:18
 
 WORKDIR /app
 
-# Install dependencies
 COPY package*.json ./
 RUN npm install
 
-# Copy code
 COPY . .
 
-# Expose React port
-EXPOSE 3001
+RUN npm run build
 
-# Start frontend
-CMD ["npm", "start"]
+RUN npm install -g serve
+
+EXPOSE 3000
+
+CMD ["serve", "-s", "build", "-l", "3000"]

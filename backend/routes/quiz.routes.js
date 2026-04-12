@@ -14,4 +14,16 @@ const quizController = require("../controllers/quiz.controller");
  */
 router.get("/", quizController.getQuestions);
 
+/**
+ * @swagger
+ * /api/quiz/submit:
+ *   post:
+ *     summary: Submit quiz answers
+ *     tags: [Quiz]
+ *     responses:
+ *       200:
+ *         description: Score calculated
+ */
+router.post("/submit", quizController.submitQuiz);
+
 module.exports = router;
