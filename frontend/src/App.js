@@ -2,7 +2,8 @@ import { useState } from "react";
 
 const App = () => {
   const [selected, setSelected] = useState({});
-  const [score, setScore] = useState(null);
+  const [result, setResult] = useState(null); // ✅ changed
+
   const questions = [
     {
       id: 1,
@@ -21,21 +22,25 @@ const App = () => {
   };
 
   const handleSubmit = async () => {
-  const res = await fetch("http://localhost:3000/api/quiz/submit", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      answers: selected
-    })
-  });
+    try {
+      const res = await fetch("http://localhost:3000/api/quiz/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          answers: selected
+        })
+      });
 
-  const data = await res.json();
+      const data = await res.json();
 
-  console.log("Score:", data.score);
-  setScore(data.score);
-};
+      console.log("Result:", data);
+      setResult(data); // ✅ FIXED
+    } catch (err) {
+      console.error("Error submitting quiz:", err);
+    }
+  };
 
   return (
     <div style={styles.container}>
@@ -44,7 +49,9 @@ const App = () => {
         {/* HEADER */}
         <header style={styles.header}>
           <div>
-            <h1 style={styles.logo}>QUIZZLY <span style={styles.vTag}>V1</span></h1>
+            <h1 style={styles.logo}>
+              QUIZZLY <span style={styles.vTag}>V3</span> {/* ✅ updated */}
+            </h1>
             <div style={styles.glowBar} />
           </div>
           <div style={styles.userInfo}>
@@ -53,7 +60,7 @@ const App = () => {
           </div>
         </header>
 
-        {/* QUIZ AREA - Flex 1 ensures it fills space without overflowing */}
+        {/* QUIZ AREA */}
         <div style={styles.quizArea}>
           {questions.map((q) => (
             <div key={q.id} style={styles.qCard}>
@@ -91,6 +98,15 @@ const App = () => {
             Finish Attempt
           </button>
         </footer>
+
+        {/* ✅ RESULT DISPLAY (NO UI CHANGE, JUST APPENDED) */}
+        {result && (
+          <div style={{ textAlign: "center", marginTop: "10px" }}>
+            <p>Score: {result.score} / {result.total}</p>
+            <p>Percentage: {result.percentage}%</p>
+          </div>
+        )}
+
       </div>
     </div>
   );
@@ -105,7 +121,7 @@ const styles = {
     fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
     display: "flex",
     justifyContent: "center",
-    overflow: "hidden", // Prevents container scroll
+    overflow: "hidden",
     margin: 0,
   },
   wrapper: {
@@ -135,7 +151,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     gap: "18px",
-    minHeight: 0, // Critical to prevent flex-item overflow
+    minHeight: 0,
     paddingBottom: "10px",
   },
   qCard: {

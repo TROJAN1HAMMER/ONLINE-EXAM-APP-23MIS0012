@@ -1,41 +1,82 @@
+// controllers/quiz.controller.js
+
+// GET QUESTIONS
 exports.getQuestions = (req, res) => {
   const questions = [
     {
       id: 1,
-      question: "What is 2 + 2?",
-      options: ["2", "3", "4", "5"],
-      answer: "4"
+      question: "Which sensor is used to measure sound intensity in decibels (dB)?",
+      options: ["PIR Sensor", "Analog SPL Meter", "LDR", "DHT11"]
     },
     {
       id: 2,
-      question: "Which language is used for web development?",
-      options: ["Python", "JavaScript", "C++", "Java"],
-      answer: "JavaScript"
+      question: "Which technology detects stationary presence via micro-movements?",
+      options: ["Ultrasonic", "Passive Infrared", "mmWave Radar", "Photoresistor"]
     }
   ];
 
-  res.json(questions);
+  res.status(200).json(questions);
 };
 
+
+// SUBMIT QUIZ (FINAL FIXED VERSION)
 exports.submitQuiz = (req, res) => {
-  const { answers } = req.body;
+  try {
+    const { answers } = req.body;
 
-  const questions = [
-    { id: 1, answer: "4" },
-    { id: 2, answer: "JavaScript" }
-  ];
-
-  let score = 0;
-
-  questions.forEach(q => {
-    if (answers[q.id] === q.answer) {
-      score++;
+    // 🔒 validation
+    if (!answers || typeof answers !== "object") {
+      return res.status(400).json({
+        success: false,
+        message: "Answers are required"
+      });
     }
-  });
 
-  res.json({
-    message: "Quiz submitted successfully",
-    score,
-    total: questions.length
-  });
+    const correctAnswers = {
+      "1": "Analog SPL Meter",
+      "2": "mmWave Radar"
+    };
+
+    let score = 0;
+
+    // 🔥 robust comparison
+    Object.keys(correctAnswers).forEach((qId) => {
+      const userAnswer = answers[qId];
+
+      const cleanUser = userAnswer
+        ? userAnswer.toString().trim().toLowerCase()
+        : "";
+
+      const cleanCorrect = correctAnswers[qId]
+        .toString()
+        .trim()
+        .toLowerCase();
+
+      // 🧪 DEBUG (leave this for now)
+      console.log(`Q${qId} -> user: "${cleanUser}" | correct: "${cleanCorrect}"`);
+
+      if (cleanUser === cleanCorrect) {
+        score++;
+      }
+    });
+
+    const total = Object.keys(correctAnswers).length;
+    const percentage = Number(((score / total) * 100).toFixed(2));
+
+    res.status(200).json({
+      success: true,
+      message: "Quiz submitted successfully",
+      score,
+      total,
+      percentage
+    });
+
+  } catch (error) {
+    console.error("Error evaluating quiz:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error"
+    });
+  }
 };
