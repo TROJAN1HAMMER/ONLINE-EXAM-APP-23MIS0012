@@ -32,6 +32,7 @@ spec:
 
         - name: frontend
           image: th500/quiz-frontend:v1
+          imagePullPolicy: Always
           ports:
             - containerPort: 3001
           resources:
