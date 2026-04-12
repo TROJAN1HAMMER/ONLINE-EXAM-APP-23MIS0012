@@ -18,11 +18,21 @@ router.get("/", quizController.getQuestions);
  * @swagger
  * /api/quiz/submit:
  *   post:
- *     summary: Submit quiz answers
+ *     summary: Submit quiz answers and calculate score
  *     tags: [Quiz]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               answers:
+ *                 type: object
+ *                 example: { "1": "Analog SPL Meter", "2": "mmWave Radar" }
  *     responses:
  *       200:
- *         description: Score calculated
+ *         description: Score calculated successfully
  */
 router.post("/submit", quizController.submitQuiz);
 

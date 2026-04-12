@@ -2,13 +2,17 @@ FROM node:18
 
 WORKDIR /app
 
-COPY package*.json ./
+# Install dependencies FIRST
+COPY package.json package-lock.json ./
 RUN npm install
 
+# Copy rest of code
 COPY . .
 
+# Build React app
 RUN npm run build
 
+# Install serve
 RUN npm install -g serve
 
 EXPOSE 3000
