@@ -2,15 +2,14 @@ FROM node:18
 
 WORKDIR /app
 
-# IMPORTANT: force install ALL deps
-ENV NODE_ENV=development
-
 COPY package.json package-lock.json ./
+
+# FORCE clean install
 RUN npm install
 
 COPY . .
 
-RUN npm run build
+RUN npx react-scripts build
 
 RUN npm install -g serve
 
