@@ -2,7 +2,12 @@ const express = require("express");
 const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger");
-require('dotenv').config();
+
+try {
+  require('dotenv').config();
+} catch (e) {
+  console.log("dotenv not found, skipping...");
+}
 
 const quizRoutes = require("./routes/quiz.routes");
 const PORT = process.env.PORT || 3000;
