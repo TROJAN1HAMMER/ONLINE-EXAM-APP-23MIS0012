@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quiz-app-deployment
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: quiz-app
+
+  template:
+    metadata:
+      labels:
+        app: quiz-app
+
+    spec:
+      containers:
+        - name: backend
+          image: th500/quiz-backend:v1
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+
+        - name: frontend
+          image: th500/quiz-frontend:v1
+          ports:
+            - containerPort: 3001
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: quiz-app-service
+
+spec:
+  type: NodePort
+  selector:
+    app: quiz-app
+
+  ports:
+    - port: 3001
+      targetPort: 3001
+      nodePort: 30007
